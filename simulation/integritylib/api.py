@@ -60,7 +60,7 @@ class GeminiModel:
         # Whole-request timeout (ms): a hung connection must not stall a
         # worker forever (observed 2026-08-07). SDK AUTO-RETRIES ARE OFF
         # (retry_options.attempts=0): the SDK's silent retries re-sent
-        # ambiguous requests and double-billed (~$29 waste, 2026-08-07).
+        # ambiguous requests and double-billed (observed 2026-08-07).
         # Every retry is controlled by call_with_retry instead.
         self.client = genai.Client(
             api_key=os.environ["GEMINI_API_KEY"],
@@ -233,7 +233,7 @@ def call_with_retry(model, prompt: str) -> dict:
 def _call_once_hard(model, prompt: str) -> dict:
     """One call + ONE retry ONLY on clean rejections (not billed).
 
-    Cost policy (2026-08-07, user-confirmed):
+    Retry policy (2026-08-07):
     - TIMEOUT (ambiguous: the server may have processed AND billed the
       request): NO in-session retry - return an error row immediately;
       the session is purged and re-run once at batch end. Retrying here

@@ -132,12 +132,6 @@ the inter-rater validation against `gold_standard.jsonl`.
 Gates, sample sizes, and statistical procedures are frozen in
 `simulation/pre_registration.md`.
 
-## Cost
-
-Approximate API cost for a full run (prepaid accounts, 2026 rates):
-Gemini ≈ $16–20, GLM ≈ ¥55, GPT ≈ $3, DeepSeek judge ≈ $10–40. A lean
-variant trims the EXP-5/EXP-2/EXP-7 sample sizes without touching the
-deterministic-tier cells.
 
 ## Models
 

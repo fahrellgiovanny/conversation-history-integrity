@@ -66,7 +66,3 @@ boundary) are judge-free: their claims depend on the tier flags, not on
 adoption scoring. Only the adoption-relevant cells (EXP-1c, EXP-1d,
 EXP-2, EXP-5, EXP-6, EXP-7) are judged.
 
-## Cost
-
-Full pass over ~23k turns ≈ $10–40 on DeepSeek, depending on caching.
-The `--dry` flag costs nothing.

@@ -57,10 +57,6 @@ utility_impact, latency_ms, event_log, promptTokens, completionTokens`.
   M6 — instructional prevention, M7 — known-answer detection
   (the four classic defenses of the formalization literature)
 
-## Cost
-
-Full sweep ≈ 2,600 sessions / ~37,600 turns: Gemini ≈ $16–20, GLM ≈ ¥55,
-GPT ≈ $3. The `--dry` flag costs nothing.
 
 ## Notes
 
