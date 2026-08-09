@@ -2,7 +2,7 @@
 
 This repository measures conversation-history integrity mechanisms. It contains the attack-layer taxonomy, the coverage theorem, the seven-mechanism comparison, and the contamination suite.
 
-> Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized Harness for Conversation-History Integrity. Authors: Giovanny, Bayuningtyas, Mukharom, Firmansyah. The paper is under review.
+> This repository supports the paper: Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized Harness for Conversation-History Integrity.
 
 Companion repository: [epistemic-policy-divergence](https://github.com/fahrellgiovanny/epistemic-policy-divergence). It contains the session-level contamination benchmark. This project uses its baselines and its dual-track judge.
 

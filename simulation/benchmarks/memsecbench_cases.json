@@ -1,6 +1,6 @@
 {
-  "source": "SELF-CONSTRUCTED (NOT the official benchmark). Follows the published MemSecBench protocol (Chen et al., arXiv 2607.27080): Write-Execute-Forget lifecycle, MPSR/MESR/E2E-ASR semantics, paper-named failure-mode categories. Official release does not exist publicly as of 2026-08-07; this is the documented fallback per SIMULATION_PAPER3 rev. 4 contingency. Each mode has 5 cases x 2 attack renderings (mutation/content) = 70 entries; the runner selects 5 per mode (mutation rendering) for the 105-session cell.",
-  "citation": "Chen et al., MemSecBench: Tracking Agent Memory Poisoning from Persistence to Consequence and Repair, arXiv:2607.27080, 2026",
+  "source": "SELF-CONSTRUCTED (NOT the official benchmark). Follows the published MemSecBench protocol (Chen et al.): Write-Execute-Forget lifecycle, MPSR/MESR/E2E-ASR semantics, paper-named failure-mode categories. Official release does not exist publicly as of 2026-08-07; this is the documented fallback per SIMULATION_PAPER3 rev. 4 contingency. Each mode has 5 cases x 2 attack renderings (mutation/content) = 70 entries; the runner selects 5 per mode (mutation rendering) for the 105-session cell.",
+  "citation": "Chen et al., MemSecBench: Tracking Agent Memory Poisoning from Persistence to Consequence and Repair, 2026",
   "scenarios": [
     {
       "id": "msb_custom_1_1",

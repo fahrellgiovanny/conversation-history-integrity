@@ -3,7 +3,7 @@
 the Integrity Framework manifest (benchmarks/poisonedrag_scenarios.json).
 
 Source: official PoisonedRAG release (sleeepeer/PoisonedRAG, USENIX
-Security 2025, arXiv 2402.07867). The repo ships pre-generated adversarial
+Security 2025). The repo ships pre-generated adversarial
 poison passages in results/adv_targeted_results/*.json with real NQ-style
 questions, correct answers, and target (incorrect) answers. Those artifacts
 are used VERBATIM; only the delivery into the harness's session format is
@@ -51,7 +51,7 @@ def main() -> None:
                             capture_output=True, text=True).stdout.strip()[:12]
     manifest = {
         "source": "PoisonedRAG official release (sleeepeer/PoisonedRAG, "
-                  "USENIX Security 2025, arXiv 2402.07867), MIT license",
+                  "USENIX Security 2025), MIT license",
         "repo_commit": commit,
         "citation": "Zou et al., PoisonedRAG: Knowledge Corruption Attacks to "
                     "Retrieval-Augmented Generation, USENIX Security 2025",

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """build_memsecbench_cases - self-constructed lifecycle cases following the
-published MemSecBench protocol (Chen et al., arXiv 2607.27080).
+published MemSecBench protocol (Chen et al.).
 
 IMPORTANT HONESTY RULE: the official MemSecBench release does not exist
-publicly as of 2026-08-07 (checked GitHub, HuggingFace, arXiv). These 35
+publicly as of 2026-08-07 (checked GitHub and HuggingFace). These 35
 cases (5 per 7 failure modes) are CONSTRUCTED BY US following the paper's
 published methodology: Write-Execute-Forget lifecycle stages, the
 MPSR/MESR/E2E-ASR metric semantics, and the failure-mode categories named
@@ -96,7 +96,7 @@ def main() -> None:
     scenarios = build()
     manifest = {
         "source": "SELF-CONSTRUCTED (NOT the official benchmark). Follows the "
-                  "published MemSecBench protocol (Chen et al., arXiv 2607.27080): "
+                  "published MemSecBench protocol (Chen et al.): "
                   "Write-Execute-Forget lifecycle, MPSR/MESR/E2E-ASR semantics, "
                   "paper-named failure-mode categories. Official release does not "
                   "exist publicly as of 2026-08-07; this is the documented fallback "
@@ -104,7 +104,7 @@ def main() -> None:
                   "x 2 attack renderings (mutation/content) = 70 entries; the runner "
                   "selects 5 per mode (mutation rendering) for the 105-session cell.",
         "citation": "Chen et al., MemSecBench: Tracking Agent Memory Poisoning from "
-                    "Persistence to Consequence and Repair, arXiv:2607.27080, 2026",
+                    "Persistence to Consequence and Repair, 2026",
         "scenarios": scenarios,
     }
     OUT.write_text(json.dumps(manifest, indent=2, ensure_ascii=False))

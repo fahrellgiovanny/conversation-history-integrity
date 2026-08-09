@@ -131,7 +131,7 @@ def main() -> None:
         "source": "AgentDojo official release (ethz-spylab/agentdojo), MIT license",
         "repo_commit": commit,
         "citation": "Debenedetti et al., AgentDojo: A Dynamic Environment to Evaluate "
-                    "Attacks and Defenses for LLM Agents, NeurIPS 2024 D&B, arXiv:2406.13352",
+                    "Attacks and Defenses for LLM Agents, NeurIPS 2024 D&B",
         "rendering_note": "Official texts verbatim; delivery rendered into the Integrity Framework "
                           "session format (content_injection = tool-output block; "
                           "history_mutation = retroactive history modification). "

@@ -1,7 +1,7 @@
 {
   "source": "AgentDojo official release (ethz-spylab/agentdojo), MIT license",
   "repo_commit": "089ed468cf3e",
-  "citation": "Debenedetti et al., AgentDojo: A Dynamic Environment to Evaluate Attacks and Defenses for LLM Agents, NeurIPS 2024 D&B, arXiv:2406.13352",
+  "citation": "Debenedetti et al., AgentDojo: A Dynamic Environment to Evaluate Attacks and Defenses for LLM Agents, NeurIPS 2024 D&B",
   "rendering_note": "Official texts verbatim; delivery rendered into the Integrity Framework session format (content_injection = tool-output block; history_mutation = retroactive history modification). AgentDojo has no native history-mutation vectors; the mutation rendering exists to make the M1-M3 mutation-vector criterion testable on official texts.",
   "scenarios": [
     {
