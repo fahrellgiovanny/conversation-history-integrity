@@ -142,11 +142,6 @@ Gates, sample sizes, and statistical procedures are frozen in
 | GPT-5.4 Mini | OpenAI | Determinism audit (zero baseline adoption) |
 | DeepSeek V4 Pro | DeepSeek | Dual-track judge (κ = 0.901) |
 
-## Data availability
-
-Simulation batch CSVs, judged.csv (30,801 turn-level verdicts), and the
-human annotation files are released with the paper. See the release assets.
-
 ## Claim discipline
 
 Tamper-evidence proves **integrity**, never truth: a false premise can be
