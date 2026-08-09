@@ -1,40 +1,27 @@
 # Conversation-History Integrity: Detectable Epistemic Attack Layers
 
-A standardized harness for measuring conversation-history integrity mechanisms:
-the attack-layer taxonomy, coverage theorem, seven-mechanism comparative
-evaluation, and the contamination suite behind
+This repository measures conversation-history integrity mechanisms. It contains the attack-layer taxonomy, the coverage theorem, the seven-mechanism comparison, and the contamination suite.
 
-> **Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized
-> Harness for Conversation-History Integrity** (Giovanny, Bayuningtyas,
-> Mukharom, Firmansyah — under review)
+> Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized Harness for Conversation-History Integrity. Authors: Giovanny, Bayuningtyas, Mukharom, Firmansyah. The paper is under review.
 
-Companion repository: [epistemic-policy-divergence](https://github.com/fahrellgiovanny/epistemic-policy-divergence)
-(the session-level contamination benchmark whose baselines and dual-track
-judge this project builds on).
+Companion repository: [epistemic-policy-divergence](https://github.com/fahrellgiovanny/epistemic-policy-divergence). It contains the session-level contamination benchmark. This project uses its baselines and its dual-track judge.
 
-## What this repository is
+## Purpose
 
-Conversational LLMs are stateless: application-layer software stores the
-conversation history and reinjects it at every turn. That history is
-infrastructure, and infrastructure can be modified. An adversary with write
-access to the history store, a poisoned retrieval database, or a shared
-multi-agent memory can rewrite what the model believes it previously said.
+A conversational Large Language Model (LLM) has no memory state of its own. Application software stores the conversation history. The software sends the history back to the model at every turn. An adversary can change this history. The adversary needs write access to the history store, to a retrieval database, or to a shared multi-agent memory.
 
-Contamination attacks differ not in what they say but in **where they land**:
-stored history (L1), content channel (L2), or instruction channel (L3). This
-repository ships:
+Contamination attacks differ in where they land. There are three attack layers:
 
-1. **The verification stack** — a three-tier deployment-layer defense
-   (hash-verify, provenance verification, instruction sanitization) with
-   deterministic detection guarantees (see `simulation/verify_stack/`).
-2. **The standardized harness** — seven mechanism classes (M1–M7) evaluated
-   head-to-head under identical stress (identical protocols, models, judge,
-   session structure) across seven experiments (EXP-1…EXP-7).
-3. **The contamination suite** — the five-protocol, ten-domain corpus
-   (A: factual inversion, B: synthetic turn injection, C: intent subversion,
-   D: reasoning chain corruption, E: confidence miscalibration).
-4. **The judge pipeline** — the dual-track automated judge (binary adoption +
-   collapse severity), κ = 0.901-validated against a human gold standard.
+- L1: stored history.
+- L2: content channel.
+- L3: instruction channel.
+
+This repository contains four parts:
+
+1. The verification stack. It is a three-tier deployment-layer defense. It uses hash verification, provenance verification, and instruction sanitization. It gives deterministic detection guarantees. See `simulation/verify_stack/`.
+2. The standardized harness. It compares seven mechanism classes (M1 to M7). All classes run under identical stress. The stress uses the same protocols, models, judge, and session structure. See EXP-1 to EXP-7.
+3. The contamination suite. It is a five-protocol, ten-domain corpus. The protocols are A to E. They are factual inversion, synthetic turn injection, intent subversion, reasoning chain corruption, and confidence miscalibration.
+4. The judge pipeline. It is a dual-track automated judge. Track 1 measures binary adoption. Track 2 measures collapse severity. The judge has agreement kappa = 0.901 with a human gold standard.
 
 ## Repository layout
 
@@ -42,7 +29,7 @@ repository ships:
 conversation-history-integrity/
 ├── simulation/          # Experiment runners, verification stack, harness
 │   ├── run_exp1.py … run_exp7.py   # The seven experiments
-│   ├── integritylib/       # Config, API clients, session runner, resume/checkpoint
+│   ├── integritylib/       # Config, API clients, session runner, checkpointing
 │   ├── verify_stack/    # T1 hash, T2 provenance, T3 sanitizer, mechanisms M1–M7
 │   ├── benchmarks/      # EXP-7 external anchor manifests (AgentDojo, MemSecBench)
 │   ├── domains.py       # 10 knowledge domains
@@ -50,7 +37,7 @@ conversation-history-integrity/
 │   ├── plans/           # Protocol texts
 │   └── pre_registration.md  # Frozen claims, gates, sample sizes
 └── validator/           # Dual-track judge + validation tooling
-    ├── judge.py         # DeepSeek dual-track judge (κ = 0.901)
+    ├── judge.py         # DeepSeek dual-track judge (kappa = 0.901)
     ├── run_judge.py  # Judge pass over simulation batches
     ├── kappa_check.py   # Inter-rater agreement
     ├── rules/rubric.json    # Published judge rubric
@@ -59,15 +46,15 @@ conversation-history-integrity/
 
 ## Quick start
 
-### 1. Install dependencies
+### 1. Install the dependencies
 
 ```bash
 pip install openai google-genai
 ```
 
-Requires Python 3.9+ (Node not required — this is a Python pipeline).
+Use Python 3.9 or newer. Node is not required.
 
-### 2. Set API keys
+### 2. Set the API keys
 
 ```bash
 export GEMINI_API_KEY="..."   # simulation models (Gemini 3.1 Flash Lite)
@@ -76,9 +63,9 @@ export OPENAI_API_KEY="..."   # GPT-5.4 Mini (EXP-1 determinism audit)
 export DEEPSEEK_API_KEY="..." # judge (validator/judge.py)
 ```
 
-Keys are read from the environment only; nothing is stored in this repo.
+API is the short form of Application Programming Interface. The runners read the keys from the environment. Nothing is stored in this repository.
 
-### 3. Smoke test
+### 3. Run a smoke test
 
 ```bash
 cd simulation
@@ -86,6 +73,8 @@ python3 run_exp1.py --dry      # dry run: verifies pipeline, no API calls
 cd ../validator
 python3 run_judge.py --dry   # fake judge, pipeline validation
 ```
+
+A dry run verifies the pipeline. It makes no API calls.
 
 ### 4. Run the experiments
 
@@ -100,9 +89,7 @@ python3 run_exp6.py   # Composition boundary (~40 sessions)
 python3 run_exp7.py   # External anchors (~140 sessions)
 ```
 
-Every runner is **resume-safe**: completed sessions are checkpointed, and a
-re-invocation only runs the missing cells. Rows are written to
-`simulation/output/integrity/` as unified-schema batch CSVs.
+Each runner is resume-safe. It writes completed sessions to checkpoint files. A new run continues where the previous run stopped. The runners write rows to `simulation/output/integrity/` as batch files. The batch files use the comma-separated values (CSV) format.
 
 ### 5. Judge the sessions
 
@@ -112,26 +99,21 @@ python3 run_judge.py            # scores all adoption-relevant cells
 python3 run_judge.py --workers 10
 ```
 
-The judge reads the batch CSVs, reconstructs the prompts the models saw
-(temperature 0 makes reconstruction deterministic), and writes `judged.csv`
-with per-turn adoption and severity verdicts. `kappa_check.py` reproduces
-the inter-rater validation against `gold_standard.jsonl`.
+The judge reads the batch files. It reconstructs the prompts that the models saw. Temperature 0 makes the reconstruction deterministic. The judge writes `judged.csv`. The file contains adoption and severity verdicts for each turn. Use `kappa_check.py` to repeat the inter-rater validation against `gold_standard.jsonl`.
 
 ## The seven experiments and their claims
 
 | Experiment | Tests | Pre-registered gate |
 |---|---|---|
-| EXP-1 | L1 detection (100% atomic), clean-FP (0), adoption reduction | Wilson LB ≥ 0.97; FP < 3% |
-| EXP-2 | L2a source authenticity, L2b role-tag integrity, L3 sanitizer | detection ≥ 80%; FP ≤ 10% |
-| EXP-3 | Overhead vs deployed state-continuity systems | median paired delta < 5% |
-| EXP-4 | Multi-agent memory transfer | pooled Wilson LB ≥ 0.90 |
+| EXP-1 | L1 detection (100% atomic), clean false positives (0), adoption reduction | Wilson lower bound at least 0.97; false positives below 3% |
+| EXP-2 | L2a source authenticity, L2b role-tag integrity, L3 sanitizer | detection at least 80%; false positives at most 10% |
+| EXP-3 | Overhead vs deployed state-continuity systems | median paired delta below 5% |
+| EXP-4 | Multi-agent memory transfer | pooled Wilson lower bound at least 0.90 |
 | EXP-5 | Comparative harness, 7 mechanism classes | ranked table, identical stress |
-| EXP-6 | Composition boundary (salami, forged reasoning) | tier-wise evasion ≥ 50% |
+| EXP-6 | Composition boundary (salami, forged reasoning) | tier-wise evasion at least 50% |
 | EXP-7 | External anchors (AgentDojo, MemSecBench) | control reproduces published ballpark |
 
-Gates, sample sizes, and statistical procedures are frozen in
-`simulation/pre_registration.md`.
-
+The gates, the sample sizes, and the statistical procedures are frozen in `simulation/pre_registration.md`.
 
 ## Models
 
@@ -140,15 +122,11 @@ Gates, sample sizes, and statistical procedures are frozen in
 | Gemini 3.1 Flash Lite | Google | Primary vulnerable model + determinism audit |
 | GLM-4.5 Air | Zhipu | Second vulnerable model |
 | GPT-5.4 Mini | OpenAI | Determinism audit (zero baseline adoption) |
-| DeepSeek V4 Pro | DeepSeek | Dual-track judge (κ = 0.901) |
+| DeepSeek V4 Pro | DeepSeek | Dual-track judge (kappa = 0.901) |
 
 ## Claim discipline
 
-Tamper-evidence proves **integrity**, never truth: a false premise can be
-stored and signed correctly. This repository never claims "tamper-proof" or
-"prevents contamination" — it detects and blocks at layer X, and the
-boundaries (composition attacks, instruction overrides, adaptive attackers)
-are documented in the paper and demonstrated in the experiments.
+Tamper evidence shows integrity. It does not show truth. A false premise can be stored and signed correctly. This repository does not claim "tamper-proof". It does not claim "prevents contamination". It detects attacks and blocks them at a specific layer. The boundaries are documented in the paper. They are shown in the experiments.
 
 ## License
 
