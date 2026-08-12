@@ -21,6 +21,16 @@ channels.
   deployment-layer defenses: the measured boundary of this class of
   mechanisms.
 
+## For practitioners
+
+- Verify stored history and content provenance with deterministic integrity
+  checks: zero false positives, no utility loss.
+- Gate instruction overrides on delivery metadata (provenance-gated gates),
+  not on pattern filters: the filters flag 35-50 percent of benign sessions.
+- The escaped and composite attacks above are the measured boundary of
+  deployment-layer defenses; they require model-internal or trajectory-level
+  mechanisms (see the paper).
+
 Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and
 Standardized Harness for Conversation-History Integrity
 (arXiv ID upon posting).
