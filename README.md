@@ -13,12 +13,12 @@ channels.
 
 - Storage-layer mutation is detected 126 of 126 sessions per model at zero
   false positives.
-- Classic prompt-injection defenses flag 35-50 percent of benign sessions —
+- Classic prompt-injection defenses flag 35-50 percent of benign sessions:
   pattern-based detection pays a measured false-positive price.
 - Provenance-gated instruction gates reach at most 1.2 percent attack
   adoption at zero false positives and zero utility loss.
 - Attacks that escape the gates or compose across fragments defeat all
-  deployment-layer defenses — the measured boundary of this class of
+  deployment-layer defenses: the measured boundary of this class of
   mechanisms.
 
 Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and
