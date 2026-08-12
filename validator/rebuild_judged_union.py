@@ -9,7 +9,7 @@ Run AFTER the re-judge completes, then re-run merge_judged.py.
 import csv, sys
 from pathlib import Path
 csv.field_size_limit(2**31-1)
-OUT_DIR = Path(__file__).resolve().parent / "output"
+OUT_DIR = Path(__file__).resolve().parent.parent / "output"
 BACKUP = OUT_DIR / "judged_full_backup.csv"
 CURRENT = OUT_DIR / "judged.csv"
 FIELDS = ["session_id","turn","cell","model","protocol","case","t1_adoption","t2_severity","justification","context_mode","judged_at"]

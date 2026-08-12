@@ -24,8 +24,9 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 csv.field_size_limit(2**31 - 1)
-SIM = Path(__file__).resolve().parent
-sys.path.insert(0, str(SIM))
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_ROOT / "simulation"))
 
 from domains import CASES  # noqa: E402
 import run_judge as J  # noqa: E402
@@ -53,7 +54,7 @@ MODES = {
 
 def load_sessions() -> dict:
     sessions = {}
-    for f in sorted(glob.glob(str(SIM / "output" / "exp*_batch_*.csv"))):
+    for f in sorted(glob.glob(str(_ROOT / "output" / "exp*_batch_*.csv"))):
         for r in csv.DictReader(open(f)):
             sid = r.get("session_id", "")
             if sid:
@@ -81,7 +82,7 @@ def sample_rows(judged, sessions) -> list:
 
 def main() -> None:
     sessions = load_sessions()
-    judged = list(csv.DictReader(open(SIM / "output" / "judged.csv")))
+    judged = list(csv.DictReader(open(_ROOT / "output" / "judged.csv")))
     sample = sample_rows(judged, sessions)
     print(f"sample: {len(sample)} rows across "
           f"{len(set(r['cell'] for r in sample))} cells")
@@ -132,7 +133,7 @@ def main() -> None:
         print(f"  [{mode}] adoption 1-rate: {adoption['1']}/{scored} "
               f"({adoption['1']/scored*100:.1f}%)  failures {failed}", flush=True)
 
-    with open(SIM / "output" / "mode_judge.csv", "w", newline="") as fh:
+    with open(_ROOT / "output" / "mode_judge.csv", "w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=list(out[0].keys()))
         w.writeheader()
         w.writerows(out)

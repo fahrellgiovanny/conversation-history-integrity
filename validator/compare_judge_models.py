@@ -20,15 +20,16 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SCRIPT_DIR))
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_ROOT / "simulation"))
 
 # Import the judge directly (a separate instance from run_judge's late import).
 import lib.judge as judge_mod  # noqa: E402
 from lib.judge import call_judge  # noqa: E402
 import run_judge as rj  # noqa: E402
 
-OUT = SCRIPT_DIR / "output" / "judge_model_compare.csv"
+OUT = _ROOT / "output" / "judge_model_compare.csv"
 
 MODELS = ["deepseek-v4-pro", "deepseek-v4-flash"]
 

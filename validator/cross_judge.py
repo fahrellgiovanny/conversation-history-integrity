@@ -16,8 +16,9 @@ import sys
 from pathlib import Path
 
 csv.field_size_limit(2**31 - 1)
-SIM = Path(__file__).resolve().parent
-sys.path.insert(0, str(SIM))
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_ROOT / "simulation"))
 
 from domains import CASES  # noqa: E402
 import run_judge as J  # noqa: E402
@@ -25,12 +26,12 @@ from lib import config  # noqa: E402
 
 TARGET = 300
 SEED = 20260809
-OUT = SIM / "output" / "cross_judge.csv"
+OUT = _ROOT / "output" / "cross_judge.csv"
 
 
 def load_sessions() -> dict:
     sessions = {}
-    for f in sorted(glob.glob(str(SIM / "output" / "exp*_batch_*.csv"))):
+    for f in sorted(glob.glob(str(_ROOT / "output" / "exp*_batch_*.csv"))):
         for r in csv.DictReader(open(f)):
             sid = r.get("session_id", "")
             if sid:
@@ -43,7 +44,7 @@ def main() -> None:
         raise RuntimeError("OPENAI_API_KEY not set")
 
     sessions = load_sessions()
-    judged = list(csv.DictReader(open(SIM / "output" / "judged.csv")))
+    judged = list(csv.DictReader(open(_ROOT / "output" / "judged.csv")))
 
     # stratified sample: attack turns (>=5) only, up to 15 per (cell, model)
     rng = random.Random(SEED)

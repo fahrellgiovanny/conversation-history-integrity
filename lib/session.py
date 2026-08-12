@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Callable, Dict, List
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "simulation"))
 
 from protocols import build_prompt, build_initial_prompt, make_system_prompt  # noqa: E402
 

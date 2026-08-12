@@ -20,13 +20,14 @@ from collections import defaultdict
 from pathlib import Path
 
 csv.field_size_limit(2**31 - 1)
-SCRIPT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SCRIPT_DIR))
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_ROOT / "simulation"))
 
 import run_judge as rj  # noqa: E402
 import lib.judge as jm  # noqa: E402
 
-OUT = SCRIPT_DIR / "output" / "sensitivity_pro.csv"
+OUT = _ROOT / "output" / "sensitivity_pro.csv"
 PRO = "deepseek-v4-pro"
 
 

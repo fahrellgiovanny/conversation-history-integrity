@@ -25,7 +25,7 @@ import time
 from pathlib import Path
 
 csv.field_size_limit(2**31 - 1)
-SIM = Path(__file__).resolve().parent
+SIM = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SIM))
 
 from domains import CASES  # noqa: E402

@@ -25,8 +25,9 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SCRIPT_DIR))
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+sys.path.insert(0, str(_ROOT / "simulation"))
 
 from lib import config  # noqa: E402
 from lib.report import wilson_ci, rule_of_three  # noqa: E402

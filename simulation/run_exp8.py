@@ -34,7 +34,7 @@ import sys
 import threading
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from domains import CASES  # noqa: E402
 from lib import config  # noqa: E402
