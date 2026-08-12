@@ -1,26 +1,3 @@
-# Simulation output (CSV batches, judged results, logs)
-simulation/output/
-validator/output/
-validator/results/
-
-# Logs
-*.log
-
-# Python
+output/
 __pycache__/
 *.pyc
-*.pyo
-
-# Secrets — never commit API keys
-.env
-.env.*
-
-# macOS
-.DS_Store
-
-# Editors
-.vscode/
-.idea/
-
-# Benchmark runtime state
-*.state.json

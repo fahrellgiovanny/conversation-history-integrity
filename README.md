@@ -1,133 +1,114 @@
-# Conversation-History Integrity: Detectable Epistemic Attack Layers
+# Conversation-History Integrity
 
-This repository measures conversation-history integrity mechanisms. It contains the attack-layer taxonomy, the coverage theorem, the seven-mechanism comparison, and the contamination suite.
+Standardized harness for evaluating conversation-history integrity
+mechanisms in multi-turn language model systems.
 
-> This repository supports the paper: Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized Harness for Conversation-History Integrity.
+This repository is the released artifact of:
 
-Companion repository: [epistemic-policy-divergence](https://github.com/fahrellgiovanny/epistemic-policy-divergence). It contains the session-level contamination benchmark. This project uses its baselines and its dual-track judge.
+**Detectable Epistemic Attack Layers: A Coverage Theorem and Standardized
+Harness for Conversation-History Integrity**
 
-## Purpose
+The paper formalizes session-level contamination (injection of false premises
+into the stored conversation history) by attack layer and states and
+empirically bounds a coverage theorem: each deployment-layer verification tier covers exactly
+its layer and is sound with respect to the others; instruction overrides are
+not detectable without false positives; and composite vectors evade
+per-fragment verification entirely. This repository is the instrument that
+makes the claims checkable: the same contamination suite, the same session
+structure, the same judge, and the same metrics applied to any integrity
+mechanism that implements one interface.
 
-A conversational Large Language Model (LLM) has no memory state of its own. Application software stores the conversation history. The software sends the history back to the model at every turn. An adversary can change this history. The adversary needs write access to the history store, to a retrieval database, or to a shared multi-agent memory.
+Companion repository: https://github.com/fahrellgiovanny/epistemic-policy-divergence
+(prior research; provides the baseline corpus this work builds on).
 
-Contamination attacks differ in where they land. There are three attack layers:
+## Repository scope
 
-- L1: stored history.
-- L2: content channel.
-- L3: instruction channel.
+This repository contains everything required to reproduce the simulation and
+the judge pipeline. Raw model outputs are not committed: model responses are
+not deterministic across API versions, and each run must generate its own
+data. What is committed is the protocol suite, the mechanisms, the runners,
+the judge, and the analysis tools.
 
-This repository contains four parts:
+## Layout
 
-1. The verification stack. It is a three-tier deployment-layer defense. It uses hash verification, provenance verification, and instruction sanitization. It gives deterministic detection guarantees. See `simulation/verify_stack/`.
-2. The standardized harness. It compares seven mechanism classes (M1 to M7). All classes run under identical stress. The stress uses the same protocols, models, judge, and session structure. See EXP-1 to EXP-7.
-3. The contamination suite. It is a five-protocol, ten-domain corpus. The protocols are A to E. They are factual inversion, synthetic turn injection, intent subversion, reasoning chain corruption, and confidence miscalibration.
-4. The judge pipeline. It is a dual-track automated judge. Track 1 measures binary adoption. Track 2 measures collapse severity. The judge has agreement kappa = 0.901 with a human gold standard.
+- `lib/` - shared library: configuration, API clients, session runner,
+  resume utilities, progress reporting, the judge implementation
+  (`lib/judge.py`, rubric included), and the SHA-256 seed helper
+  (`lib/seeds.py`)
+- `verify_stack/` - the three verification tiers (T1 history integrity,
+  T2 provenance verification, T3 instruction sanitization) and the
+  mechanism families under test (M1-M8)
+- `benchmarks/` - third-party manifests (AgentDojo, PoisonedRAG) and the
+  self-constructed memory-lifecycle cases
+- `domains.py`, `protocols.py` - the five-protocol contamination suite over
+  ten knowledge domains (the regression suite)
+- `run_exp1.py` ... `run_exp8.py` - the eight experiment runners
+- `run_exp8_probe.py` - the shape-boundary probe (exploratory)
+- `run_t3v2.py` - the guard-model variant cell (T3-v2)
+- `run_judge.py` - the automated adoption judge (adoption and severity verdicts)
+- `mode_judge.py`, `cross_judge.py`, `compare_judge_models.py`,
+  `judge_sensitivity.py` - judge validation and sensitivity analyses
+- `build_annotation_file.py` - human-annotation workbook construction
+- `merge_judged.py`, `rebuild_judged_union.py` - judged-label pipeline
+- `audit_results.py`, `tables.py` - analysis and table generation
+- `pre_registration.md` - frozen protocol, claims, thresholds, and the
+  scientific amendment log
 
-## Repository layout
+## The contamination suite
 
-```
-conversation-history-integrity/
-├── simulation/          # Experiment runners, verification stack, harness
-│   ├── run_exp1.py … run_exp7.py   # The seven experiments
-│   ├── integritylib/       # Config, API clients, session runner, checkpointing
-│   ├── verify_stack/    # T1 hash, T2 provenance, T3 sanitizer, mechanisms M1–M7
-│   ├── benchmarks/      # EXP-7 external anchor manifests (AgentDojo, MemSecBench)
-│   ├── domains.py       # 10 knowledge domains
-│   ├── protocols.py     # 5 contamination protocols
-│   ├── plans/           # Protocol texts
-│   └── pre_registration.md  # Frozen claims, gates, sample sizes
-└── validator/           # Dual-track judge + validation tooling
-    ├── judge.py         # DeepSeek dual-track judge (kappa = 0.901)
-    ├── run_judge.py  # Judge pass over simulation batches
-    ├── kappa_check.py   # Inter-rater agreement
-    ├── rules/rubric.json    # Published judge rubric
-    └── gold_standard.jsonl  # Human gold standard corpus
-```
+Five protocols hold a false premise constant while varying its epistemic
+framing, spanning the three attack layers: storage mutation (L1), source
+fabrication (L2), and instruction override (L3). Each session runs fifteen
+turns; the injection occurs at turn 5; turns 6 through 15 observe
+post-injection dynamics. The complete turn texts for all ten knowledge
+domains are generated from `domains.py` and `protocols.py`.
 
-## Quick start
+## Mechanisms under test
 
-### 1. Install the dependencies
+- M1 plain hash verification
+- M2 signed transitions
+- M3 digest-plus-ledger (simulated secure module)
+- M4 delimiter isolation
+- M5 sandwich prevention
+- M6 instructional prevention
+- M7 known-answer detection
+- M8a naive refusal floor / M8b channel separation / M8c provenance-gated
+  refusal
+- T3-v2 guard model (confidence-threshold escalation)
+- STACK (all tiers composed)
 
-```bash
-pip install openai google-genai
-```
+## Reproducing the evaluation
 
-Use Python 3.9 or newer. Node is not required.
+1. Install Python 3.9+ and the dependencies (`openai`, `google-genai`,
+   `openpyxl`).
+2. Set the API keys as environment variables: `GEMINI_API_KEY`,
+   `ZHIPUAI_API_KEY`, `OPENAI_API_KEY`, `DEEPSEEK_API_KEY`.
+3. Run the experiments in order (each runner is resume-safe; a fixed per-cell
+   seed makes sessions deterministic given the model and the API response):
+   `python3 run_exp1.py` ... `python3 run_exp8.py`
+   `python3 run_exp8_probe.py`
+   `python3 run_t3v2.py`
+4. Judge the adoption-relevant cells:
+   `python3 run_judge.py`
+   (pipeline structure verifiable without an API: run any runner with `--dry`)
+   then `python3 rebuild_judged_union.py && python3 merge_judged.py`
+5. Validate the judge: `python3 mode_judge.py` (verdict-mode sensitivity),
+   `python3 cross_judge.py` (cross-family agreement),
+   `python3 build_annotation_file.py` (human-annotation workbook).
+6. Produce the analysis: `python3 audit_results.py` (proportions with Wilson
+   95% confidence intervals), `python3 tables.py` (ASV/MR tables).
 
-### 2. Set the API keys
+All proportions report Wilson 95 percent confidence intervals; deterministic
+tier false positives report the rule-of-three bound. Adoption claims are
+reported under three verdict modes (strict, lenient, and an "I don't know"
+mode), and the deterministic claims are judge-free anchors.
 
-```bash
-export GEMINI_API_KEY="..."   # simulation models (Gemini 3.1 Flash Lite)
-export ZHIPUAI_API_KEY="..."  # GLM-4.5 Air (Zhipu open.bigmodel.cn)
-export OPENAI_API_KEY="..."   # GPT-5.4 Mini (EXP-1 determinism audit)
-export DEEPSEEK_API_KEY="..." # judge (validator/judge.py)
-```
+## Pre-registration
 
-API is the short form of Application Programming Interface. The runners read the keys from the environment. Nothing is stored in this repository.
+All claims, thresholds, and sample sizes are frozen in
+`pre_registration.md` before the scale runs, with the scientific amendments
+recorded in the same document.
 
-### 3. Run a smoke test
+## Status
 
-```bash
-cd simulation
-python3 run_exp1.py --dry      # dry run: verifies pipeline, no API calls
-cd ../validator
-python3 run_judge.py --dry   # fake judge, pipeline validation
-```
-
-A dry run verifies the pipeline. It makes no API calls.
-
-### 4. Run the experiments
-
-```bash
-cd simulation
-python3 run_exp1.py   # L1 stack evaluation (~1,112 sessions)
-python3 run_exp2.py   # L2/L3 semantic tiers (~300 sessions)
-python3 run_exp3.py   # Paired overhead sub-study (~30 sessions)
-python3 run_exp4.py   # Multi-agent memory (~60 sessions)
-python3 run_exp5.py   # Comparative harness, M1–M7 (~920 sessions)
-python3 run_exp6.py   # Composition boundary (~40 sessions)
-python3 run_exp7.py   # External anchors (~140 sessions)
-```
-
-Each runner is resume-safe. It writes completed sessions to checkpoint files. A new run continues where the previous run stopped. The runners write rows to `simulation/output/integrity/` as batch files. The batch files use the comma-separated values (CSV) format.
-
-### 5. Judge the sessions
-
-```bash
-cd validator
-python3 run_judge.py            # scores all adoption-relevant cells
-python3 run_judge.py --workers 10
-```
-
-The judge reads the batch files. It reconstructs the prompts that the models saw. Temperature 0 makes the reconstruction deterministic. The judge writes `judged.csv`. The file contains adoption and severity verdicts for each turn. Use `kappa_check.py` to repeat the inter-rater validation against `gold_standard.jsonl`.
-
-## The seven experiments and their claims
-
-| Experiment | Tests | Pre-registered gate |
-|---|---|---|
-| EXP-1 | L1 detection (100% atomic), clean false positives (0), adoption reduction | Wilson lower bound at least 0.97; false positives below 3% |
-| EXP-2 | L2a source authenticity, L2b role-tag integrity, L3 sanitizer | detection at least 80%; false positives at most 10% |
-| EXP-3 | Overhead vs deployed state-continuity systems | median paired delta below 5% |
-| EXP-4 | Multi-agent memory transfer | pooled Wilson lower bound at least 0.90 |
-| EXP-5 | Comparative harness, 7 mechanism classes | ranked table, identical stress |
-| EXP-6 | Composition boundary (salami, forged reasoning) | tier-wise evasion at least 50% |
-| EXP-7 | External anchors (AgentDojo, MemSecBench) | control reproduces published ballpark |
-
-The gates, the sample sizes, and the statistical procedures are frozen in `simulation/pre_registration.md`.
-
-## Models
-
-| Model | Provider | Role |
-|---|---|---|
-| Gemini 3.1 Flash Lite | Google | Primary vulnerable model + determinism audit |
-| GLM-4.5 Air | Zhipu | Second vulnerable model |
-| GPT-5.4 Mini | OpenAI | Determinism audit (zero baseline adoption) |
-| DeepSeek V4 Pro | DeepSeek | Dual-track judge (kappa = 0.901) |
-
-## Claim discipline
-
-Tamper evidence shows integrity. It does not show truth. A false premise can be stored and signed correctly. This repository does not claim "tamper-proof". It does not claim "prevents contamination". It detects attacks and blocks them at a specific layer. The boundaries are documented in the paper. They are shown in the experiments.
-
-## License
-
-MIT
+Released at publication. The judge rubric and prompts ship with the release.
