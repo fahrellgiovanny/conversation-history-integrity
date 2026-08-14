@@ -32,8 +32,7 @@ channels.
   mechanisms (see the paper).
 
 Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and
-Standardized Harness for Conversation-History Integrity
-(arXiv ID upon posting).
+Standardized Harness for Conversation-History Integrity.
 
 Companion (prior research, baseline corpus):
 https://github.com/fahrellgiovanny/epistemic-policy-divergence
