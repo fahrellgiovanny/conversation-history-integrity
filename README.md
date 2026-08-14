@@ -15,7 +15,7 @@ channels.
   false positives.
 - Classic prompt-injection defenses flag 35-50 percent of benign sessions:
   pattern-based detection pays a measured false-positive price.
-- Provenance-gated instruction gates reach at most 1.2 percent attack
+- Provenance-gated instruction filtering reaches at most 1.2 percent
   adoption at zero false positives and zero utility loss.
 - Attacks that escape the gates or compose across fragments defeat all
   deployment-layer defenses: the measured boundary of this class of
@@ -25,8 +25,8 @@ channels.
 
 - Verify stored history and content provenance with deterministic integrity
   checks: zero false positives, no utility loss.
-- Gate instruction overrides on delivery metadata (provenance-gated gates),
-  not on pattern filters: the filters flag 35-50 percent of benign sessions.
+- Gate instruction overrides on delivery metadata (provenance-gated), not
+  on pattern filters: the filters flag 35-50 percent of benign sessions.
 - The escaped and composite attacks above are the measured boundary of
   deployment-layer defenses; they require model-internal or trajectory-level
   mechanisms (see the paper).
