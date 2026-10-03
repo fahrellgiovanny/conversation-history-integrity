@@ -35,6 +35,7 @@ Paper: Detectable Epistemic Attack Layers: A Coverage Theorem and
 Standardized Harness for Conversation-History Integrity.
 
 Companion (prior research, baseline corpus):
+Epistemic Policy Divergence in Multi-Turn LLM Contamination — arXiv:2609.35308 [cs.CL]
 https://github.com/fahrellgiovanny/epistemic-policy-divergence
 
 Full reproduction: see [RUNBOOK.md](RUNBOOK.md)
